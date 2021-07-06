@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "configuracaoArquiteturaBackEnd.api", "configuracaoArquiteturaBackEnd.api\configuracaoArquiteturaBackEnd.api.csproj", "{D1BF9D81-B365-4813-A5D9-0276F45FD2FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1BF9D81-B365-4813-A5D9-0276F45FD2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1BF9D81-B365-4813-A5D9-0276F45FD2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1BF9D81-B365-4813-A5D9-0276F45FD2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1BF9D81-B365-4813-A5D9-0276F45FD2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {509F562A-D999-45F0-815F-2D68379DFE60}
+	EndGlobalSection
+EndGlobal
