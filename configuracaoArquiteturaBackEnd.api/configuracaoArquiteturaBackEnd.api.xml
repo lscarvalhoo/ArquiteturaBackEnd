@@ -4,10 +4,5 @@
         <name>configuracaoArquiteturaBackEnd.api</name>
     </assembly>
     <members>
-		<summay>
-			teste
-		</summay>
-		<param name =" loginViewModelInput"></param>
-		<returns></returns>
     </members>
 </doc>
