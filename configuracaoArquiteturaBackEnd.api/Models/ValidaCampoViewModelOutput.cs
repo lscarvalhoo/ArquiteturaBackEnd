@@ -9,9 +9,9 @@ namespace configuracaoArquiteturaBackEnd.api.Models
     {
         public IEnumerable<string> Erros { get;  set;}
 
-        public ValidaCampoViewModelOutput(IEnumerable<string> erro)
+        public ValidaCampoViewModelOutput(IEnumerable<string> erros)
         {
-            Erros = Erros;
+            Erros = erros;
         }
     }
 }
