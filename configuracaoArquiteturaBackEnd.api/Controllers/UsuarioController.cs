@@ -12,6 +12,9 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using configuracaoArquiteturaBackEnd.api.Infra.Data;
+using Microsoft.EntityFrameworkCore;
+using configuracaoArquiteturaBackEnd.api.Business.Entities;
 
 namespace configuracaoArquiteturaBackEnd.api.Controllers
 {
@@ -67,9 +70,25 @@ namespace configuracaoArquiteturaBackEnd.api.Controllers
         [HttpPost]
         [ValidacaoModelStateCustomizado]
         [Route("registrar")]
-        public IActionResult Registrar(RegistrarViewModelInput registrarViewModelInput)
+        public IActionResult Registrar(RegistrarViewModelInput loginViewModelInput)
         {
-            return Created("", registrarViewModelInput);
+            var optionsBuilder = new DbContextOptionsBuilder<CursoDbContext>();
+            optionsBuilder.UseSqlServer("Server =  SQLEXPRESS; Databese = CURSO2"); 
+            CursoDbContext contexto = new CursoDbContext(optionsBuilder.Options);
+
+            var migracoesPendentes = contexto.Database.GetPendingMigrations();
+            if (migracoesPendentes.Count() > 0)
+            {
+                contexto.Database.Migrate();
+            }
+            var usuario = new Usuario();
+            usuario.Login = loginViewModelInput.Login;
+            usuario.Senha = loginViewModelInput.Senha;
+            usuario.Email = loginViewModelInput.Email;
+            contexto.Add(usuario); 
+            contexto.SaveChanges();
+
+            return Created("", loginViewModelInput);
         }
     }
 
