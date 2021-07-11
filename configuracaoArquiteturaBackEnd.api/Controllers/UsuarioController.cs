@@ -15,6 +15,8 @@ using System.IdentityModel.Tokens.Jwt;
 using configuracaoArquiteturaBackEnd.api.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using configuracaoArquiteturaBackEnd.api.Business.Entities;
+using configuracaoArquiteturaBackEnd.api.Business.Repositories;
+using Microsoft.Extensions.Configuration;
 
 namespace configuracaoArquiteturaBackEnd.api.Controllers
 {
@@ -23,6 +25,19 @@ namespace configuracaoArquiteturaBackEnd.api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IConfiguration _configuration;
+        private readonly IAuthenticationService _authentication;
+
+        public UsuarioController(IUsuarioRepository usuarioRepository, 
+                                 IConfiguration configuration,
+                                 IAuthenticationService authentication)
+        {
+            _usuarioRepository = usuarioRepository;
+            _configuration = configuration;
+            _authentication = authentication;
+        }
+
         [SwaggerResponse(statusCode: 200, description:"Sucesso", Type = typeof(LoginViewModelInput))]
         [SwaggerResponse(statusCode: 400, description:"Campo Obrigatório", Type = typeof(ValidaCampoViewModelOutput))]
         [SwaggerResponse(statusCode: 500, description:"Erro", Type = typeof(ErroGenericoViewModel))]
@@ -42,7 +57,7 @@ namespace configuracaoArquiteturaBackEnd.api.Controllers
                 Email = "leo@icloud.com"
             };
 
-            var secret = Encoding.ASCII.GetBytes("MzfsT&d9gprP>!9$Es(X!5g@;ef!5sbk:jH\\2.}8ZP'qY#7");
+           /* var secret = Encoding.ASCII.GetBytes(_configuration.GetConnectionString("JwtConfigurations: Secret"));
             var symmetricSecurityKey = new SymmetricSecurityKey(secret);
             var securityTokenDescriptor = new SecurityTokenDescriptor
             {
@@ -57,8 +72,9 @@ namespace configuracaoArquiteturaBackEnd.api.Controllers
             };
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var tokenGenerated = jwtSecurityTokenHandler.CreateToken(securityTokenDescriptor);
-            var token = jwtSecurityTokenHandler.WriteToken(tokenGenerated);
+            var token = jwtSecurityTokenHandler.WriteToken(tokenGenerated);*/
 
+            var token = _authentication.ObterToken(usuarioViewModelOutput);
             return Ok(new
             {
                 Token = token,
@@ -72,21 +88,12 @@ namespace configuracaoArquiteturaBackEnd.api.Controllers
         [Route("registrar")]
         public IActionResult Registrar(RegistrarViewModelInput loginViewModelInput)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<CursoDbContext>();
-            optionsBuilder.UseSqlServer("Server =  SQLEXPRESS; Databese = CURSO2"); 
-            CursoDbContext contexto = new CursoDbContext(optionsBuilder.Options);
-
-            var migracoesPendentes = contexto.Database.GetPendingMigrations();
-            if (migracoesPendentes.Count() > 0)
-            {
-                contexto.Database.Migrate();
-            }
             var usuario = new Usuario();
             usuario.Login = loginViewModelInput.Login;
             usuario.Senha = loginViewModelInput.Senha;
             usuario.Email = loginViewModelInput.Email;
-            contexto.Add(usuario); 
-            contexto.SaveChanges();
+            _usuarioRepository.Adicionar(usuario);
+            _usuarioRepository.Commit();
 
             return Created("", loginViewModelInput);
         }
